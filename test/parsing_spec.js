@@ -334,7 +334,7 @@ describe('parsing', function(){
           })
         })
 
-        it('should have a .parser = json property', function(done) {
+        it('should have a .parser = xml property', function(done) {
           needle.get('localhost:' + PORT, function(err, resp) {
             should.not.exist(err);
             resp.parser.should.eql('xml');
@@ -346,22 +346,18 @@ describe('parsing', function(){
 
       describe('and parse response is not true', function(){
 
-        it('should return xml string', function(){
-
+        it('should return xml string', function(done){
+			needle.get('localhost:' + PORT, { parse: false }, function(err, response, body) {
+			  should.not.exist(err);
+			  body.should.be.an.instanceof(String);
+			  body.should.equal('<post><body>hello there</body></post>');
+			  done();
+			})
         })
 
       })
 
     })
-
-    describe('and xml2js is not found', function(){
-
-      it('should return xml string', function(){
-
-      })
-
-    })
-
 
   })
 

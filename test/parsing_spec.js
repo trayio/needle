@@ -329,7 +329,7 @@ describe('parsing', function(){
         it('should return valid object', function(done){
           needle.get('localhost:' + PORT, function(err, response, body){
             should.not.exist(err);
-			assert.deepEqual(body.post, { body: 'hello there'});
+            assert.deepEqual(body.post, { body: 'hello there'});
             done();
           })
         })

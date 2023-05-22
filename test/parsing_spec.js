@@ -1,8 +1,10 @@
-var should = require('should'),
+const should = require('should'),
+    assert = require('assert'),
     needle = require('./../'),
-    http   = require('http'),
-    port   = 11111,
-    server;
+    http   = require('http');
+
+const PORT = 11111;
+let server;
 
 describe('parsing', function(){
 
@@ -14,7 +16,7 @@ describe('parsing', function(){
       server = http.createServer(function(req, res) {
         res.setHeader('Content-Type', 'application/json');
         res.end(json_string);
-      }).listen(port, done);
+      }).listen(PORT, done);
     });
 
     after(function(done){
@@ -30,7 +32,7 @@ describe('parsing', function(){
         })
 
         it('should return object', function(done){
-          needle.get('localhost:' + port, function(err, response, body){
+          needle.get('localhost:' + PORT, function(err, response, body){
             should.ifError(err);
             body.should.have.property('foo', 'bar');
             done();
@@ -44,7 +46,7 @@ describe('parsing', function(){
         it('does NOT return object when disabled using .defaults', function(done){
           needle.defaults({ parse_response: false })
 
-          needle.get('localhost:' + port, function(err, response, body) {
+          needle.get('localhost:' + PORT, function(err, response, body) {
             should.not.exist(err);
             body.should.be.an.instanceof(String)
             body.toString().should.eql('{"foo":"bar"}');
@@ -64,7 +66,7 @@ describe('parsing', function(){
       describe('and JSON is valid', function() {
 
         it('should return object', function(done) {
-          needle.get('localhost:' + port, { parse: true }, function(err, response, body){
+          needle.get('localhost:' + PORT, { parse: true }, function(err, response, body){
             should.not.exist(err);
             body.should.have.property('foo', 'bar')
             done();
@@ -72,7 +74,7 @@ describe('parsing', function(){
         })
 
         it('should have a .parser = json property', function(done) {
-          needle.get('localhost:' + port, { parse: true }, function(err, resp) {
+          needle.get('localhost:' + PORT, { parse: true }, function(err, resp) {
             should.not.exist(err);
             resp.parser.should.eql('json');
             done();
@@ -95,7 +97,7 @@ describe('parsing', function(){
         });
 
         it('should return an empty string', function(done) {
-          needle.get('localhost:' + port, { parse: true }, function(err, resp) {
+          needle.get('localhost:' + PORT, { parse: true }, function(err, resp) {
             should.not.exist(err);
             resp.body.should.equal('');
             done();
@@ -119,12 +121,12 @@ describe('parsing', function(){
 
         it('does not throw', function(done) {
           (function(){
-            needle.get('localhost:' + port, { parse: true }, done);
+            needle.get('localhost:' + PORT, { parse: true }, done);
           }).should.not.throw();
         });
 
         it('does NOT return object', function(done) {
-          needle.get('localhost:' + port, { parse: true }, function(err, response, body) {
+          needle.get('localhost:' + PORT, { parse: true }, function(err, response, body) {
             should.not.exist(err);
             body.should.be.a.String;
             body.toString().should.eql('this is not going to work');
@@ -139,7 +141,7 @@ describe('parsing', function(){
     describe('and parse option is false', function() {
 
       it('does NOT return object', function(done){
-        needle.get('localhost:' + port, { parse: false }, function(err, response, body) {
+        needle.get('localhost:' + PORT, { parse: false }, function(err, response, body) {
           should.not.exist(err);
           body.should.be.an.instanceof(String)
           body.toString().should.eql('{"foo":"bar"}');
@@ -148,7 +150,7 @@ describe('parsing', function(){
       })
 
       it('should NOT have a .parser = json property', function(done) {
-        needle.get('localhost:' + port, { parse: false }, function(err, resp) {
+        needle.get('localhost:' + PORT, { parse: false }, function(err, resp) {
           should.not.exist(err);
           should.not.exist(resp.parser);
           done();
@@ -160,7 +162,7 @@ describe('parsing', function(){
     describe('and parse option is "xml"', function() {
 
       it('does NOT return object', function(done){
-        needle.get('localhost:' + port, { parse: 'xml' }, function(err, response, body) {
+        needle.get('localhost:' + PORT, { parse: 'xml' }, function(err, response, body) {
           should.not.exist(err);
           body.should.be.an.instanceof(String)
           body.toString().should.eql('{"foo":"bar"}');
@@ -169,7 +171,7 @@ describe('parsing', function(){
       })
 
       it('should NOT have a .parser = json property', function(done) {
-        needle.get('localhost:' + port, { parse: 'xml' }, function(err, resp) {
+        needle.get('localhost:' + PORT, { parse: 'xml' }, function(err, resp) {
           should.not.exist(err);
           should.not.exist(resp.parser);
           done();
@@ -188,7 +190,7 @@ describe('parsing', function(){
       server = http.createServer(function(req, res) {
         res.setHeader('Content-Type', 'application/json');
         res.end(json_string);
-      }).listen(port, done);
+      }).listen(PORT, done);
     });
 
     after(function(done){
@@ -198,7 +200,7 @@ describe('parsing', function(){
     describe('and parse option is not passed', function() {
 
       it('should return object', function(done){
-        needle.get('localhost:' + port, function(err, response, body){
+        needle.get('localhost:' + PORT, function(err, response, body){
           should.ifError(err);
           body.should.equal(false);
           done();
@@ -212,7 +214,7 @@ describe('parsing', function(){
       describe('and JSON is valid', function() {
 
         it('should return object', function(done){
-          needle.get('localhost:' + port, { parse: true }, function(err, response, body){
+          needle.get('localhost:' + PORT, { parse: true }, function(err, response, body){
             should.not.exist(err);
             body.should.equal(false)
             done();
@@ -235,7 +237,7 @@ describe('parsing', function(){
         });
 
         it('should return an empty string', function(done) {
-          needle.get('localhost:' + port, { parse: true }, function(err, resp) {
+          needle.get('localhost:' + PORT, { parse: true }, function(err, resp) {
             should.not.exist(err);
             resp.body.should.equal('');
             done();
@@ -259,12 +261,12 @@ describe('parsing', function(){
 
         it('does not throw', function(done) {
           (function(){
-            needle.get('localhost:' + port, { parse: true }, done);
+            needle.get('localhost:' + PORT, { parse: true }, done);
           }).should.not.throw();
         });
 
         it('does NOT return object', function(done) {
-          needle.get('localhost:' + port, { parse: true }, function(err, response, body) {
+          needle.get('localhost:' + PORT, { parse: true }, function(err, response, body) {
             should.not.exist(err);
             body.should.be.a.String;
             body.toString().should.eql('this is not going to work');
@@ -279,7 +281,7 @@ describe('parsing', function(){
     describe('and parse option is false', function() {
 
       it('does NOT return object', function(done){
-        needle.get('localhost:' + port, { parse: false }, function(err, response, body) {
+        needle.get('localhost:' + PORT, { parse: false }, function(err, response, body) {
           should.not.exist(err);
           body.should.be.an.instanceof(String)
           body.toString().should.eql('false');
@@ -292,7 +294,7 @@ describe('parsing', function(){
     describe('and parse option is "xml"', function() {
 
       it('does NOT return object', function(done){
-        needle.get('localhost:' + port, { parse: 'xml' }, function(err, response, body) {
+        needle.get('localhost:' + PORT, { parse: 'xml' }, function(err, response, body) {
           should.not.exist(err);
           body.should.be.an.instanceof(String)
           body.toString().should.eql('false');
@@ -311,7 +313,7 @@ describe('parsing', function(){
       server = http.createServer(function(req, res) {
         res.writeHeader(200, {'Content-Type': 'application/xml'})
         res.end("<post><body>hello there</body></post>")
-      }).listen(port, done);
+      }).listen(PORT, done);
     });
 
     after(function(done){
@@ -325,15 +327,15 @@ describe('parsing', function(){
       describe('and parse_response is true', function(){
 
         it('should return valid object', function(done){
-          needle.get('localhost:' + port, function(err, response, body){
+          needle.get('localhost:' + PORT, function(err, response, body){
             should.not.exist(err);
-            body.post.should.have.property('body', 'hello there');
+			assert.deepEqual(body.post, { body: 'hello there'});
             done();
           })
         })
 
         it('should have a .parser = json property', function(done) {
-          needle.get('localhost:' + port, function(err, resp) {
+          needle.get('localhost:' + PORT, function(err, resp) {
             should.not.exist(err);
             resp.parser.should.eql('xml');
             done();
@@ -369,7 +371,7 @@ describe('parsing', function(){
   //     server = http.createServer(function(req, res) {
   //       res.writeHeader(200, {'Content-Type': 'application/xml'})
   //       res.end("<post><p>hello</p><p><![CDATA[world]]></p></post>")
-  //     }).listen(port, done);
+  //     }).listen(PORT, done);
   //   });
   //
   //   after(function(done) {
@@ -379,7 +381,7 @@ describe('parsing', function(){
   //   describe('and parse_response is true', function(){
   //
   //     it('should return valid object', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: true }, function(err, response, body) {
+  //       needle.get('localhost:' + PORT, { parse_response: true }, function(err, response, body) {
   //         should.not.exist(err);
   //         body.name.should.eql('post')
   //         body.children[0].name.should.eql('p')
@@ -392,7 +394,7 @@ describe('parsing', function(){
   //     })
   //
   //     it('should have a .parser = xml property', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: true }, function(err, resp) {
+  //       needle.get('localhost:' + PORT, { parse_response: true }, function(err, resp) {
   //         should.not.exist(err);
   //         resp.parser.should.eql('xml');
   //         done();
@@ -404,7 +406,7 @@ describe('parsing', function(){
   //   describe('and parse response is false', function(){
   //
   //     it('should return valid object', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: false }, function(err, response, body){
+  //       needle.get('localhost:' + PORT, { parse_response: false }, function(err, response, body){
   //         should.not.exist(err);
   //         body.toString().should.eql('<post><p>hello</p><p><![CDATA[world]]></p></post>')
   //         done();
@@ -412,7 +414,7 @@ describe('parsing', function(){
   //     })
   //
   //     it('should not have a .parser property', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: false }, function(err, resp) {
+  //       needle.get('localhost:' + PORT, { parse_response: false }, function(err, resp) {
   //         should.not.exist(err);
   //         should.not.exist(resp.parser)
   //         done();
@@ -441,7 +443,7 @@ describe('parsing', function(){
   //     server = http.createServer(function(req, res) {
   //       res.writeHeader(200, {'Content-Type': 'application/xml'})
   //       res.end("<post><p>hello</p><p>world</p></post>")
-  //     }).listen(port, done);
+  //     }).listen(PORT, done);
   //   });
   //
   //   after(function(done) {
@@ -452,7 +454,7 @@ describe('parsing', function(){
   //   describe('and parse_response is true', function(){
   //
   //     it('should return valid object', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: true }, function(err, response, body) {
+  //       needle.get('localhost:' + PORT, { parse_response: true }, function(err, response, body) {
   //         should.not.exist(err);
   //         body.should.eql({ post: { p: ['hello', 'world' ]}})
   //         done();
@@ -460,7 +462,7 @@ describe('parsing', function(){
   //     })
   //
   //     it('should have a .parser = xml property', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: true }, function(err, resp) {
+  //       needle.get('localhost:' + PORT, { parse_response: true }, function(err, resp) {
   //         should.not.exist(err);
   //         resp.parser.should.eql('xml2js');
   //         done();
@@ -472,7 +474,7 @@ describe('parsing', function(){
   //   describe('and parse response is false', function(){
   //
   //     it('should return valid object', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: false }, function(err, response, body){
+  //       needle.get('localhost:' + PORT, { parse_response: false }, function(err, response, body){
   //         should.not.exist(err);
   //         body.toString().should.eql('<post><p>hello</p><p>world</p></post>')
   //         done();
@@ -480,7 +482,7 @@ describe('parsing', function(){
   //     })
   //
   //     it('should not have a .parser property', function(done) {
-  //       needle.get('localhost:' + port, { parse_response: false }, function(err, resp) {
+  //       needle.get('localhost:' + PORT, { parse_response: false }, function(err, resp) {
   //         should.not.exist(err);
   //         should.not.exist(resp.parser)
   //         done();
@@ -499,7 +501,7 @@ describe('parsing', function(){
   //     server = http.createServer(function(req, res) {
   //       res.setHeader('Content-Type', 'application/vnd.api+json');
   //       res.end(json_string);
-  //     }).listen(port, done);
+  //     }).listen(PORT, done);
   //   });
   //
   //   after(function(done){
@@ -515,7 +517,7 @@ describe('parsing', function(){
   //       })
   //
   //       it('should return object', function(done){
-  //         needle.get('localhost:' + port, function(err, response, body){
+  //         needle.get('localhost:' + PORT, function(err, response, body){
   //           should.ifError(err);
   //           body.should.deepEqual({
   //             "data": [{
